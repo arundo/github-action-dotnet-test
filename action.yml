@@ -1,0 +1,31 @@
+name: 'Test .NET 5.0 Solution'
+description: 'This tests a .NET solution that follows specific conventions'
+inputs:
+  required-input:  # id of input
+    description: 'Who to greet'
+    required: true
+    default: 'Harold'
+
+runs:
+  using: "composite"
+  steps:
+    - name: Checkout repo
+      uses: actions/checkout@v2
+
+    - name: Install .NET 5.0 latest
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.x
+        source-url: https://nuget.pkg.github.com/arundo/index.json
+      env:
+        NUGET_AUTH_TOKEN: ${{secrets.PACKAGE_READ_GITHUB_TOKEN}}
+    
+    - name: Test and save test results
+      run: dotnet test /p:CollectCoverage=true /p:CoverletOutput=TestResults/ /p:CoverletOutputFormat=lcov
+      shell: bash
+
+    - name: Send Test results to Coveralls
+      uses: coverallsapp/github-action@master
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        path-to-lcov: ./tests/UnitTests/TestResults/coverage.info
