@@ -21,7 +21,7 @@ runs:
         dotnet-version: 5.0.x
         source-url: https://nuget.pkg.github.com/arundo/index.json
       env:
-        NUGET_AUTH_TOKEN: ${{inputs.nuget-auth-token}}
+        NUGET_AUTH_TOKEN: ${{inputs.nuget-read-token}
     
     - name: Test and save test results
       run: dotnet test /p:CollectCoverage=true /p:CoverletOutput=TestResults/ /p:CoverletOutputFormat=lcov
