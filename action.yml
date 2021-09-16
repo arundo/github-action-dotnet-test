@@ -1,9 +1,14 @@
 name: 'Test .NET 5.0 Solution'
 description: 'This tests a .NET solution that follows specific conventions'
+
 inputs:
-  nuget-auth-token:
+  nuget-read-token:
     description: 'Read-only nuget token, called PACKAGE_READ_GITHUB_TOKEN in Arundo'
     required: true
+  this-repo-token:
+    description: 'GITHUB_TOKEN for the repo calling this action'
+    required: true
+    
 runs:
   using: "composite"
   steps:
@@ -25,6 +30,5 @@ runs:
     - name: Send Test results to Coveralls
       uses: coverallsapp/github-action@master
       with:
-        github-token: ${{inputs.nuget-auth-token}}
-#        github-token: ${{ secrets.GITHUB_TOKEN }}
+        github-token: ${{inputs.this-repo-token}}
         path-to-lcov: ./tests/UnitTests/TestResults/coverage.info
